@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Stock Table
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading data...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <ngx-datatable class="material bordered-table"
+      [rows]="stockStore.stocks" [columns]="columns" 
+      [columnMode]="'force'"
+      [headerHeight]="50" 
+      [footerHeight]="50" 
+      [rowHeight]="'auto'">
+
+      <ngx-datatable-column name="Trading Symbol" prop="tradingsymbol"></ngx-datatable-column>
+      <ngx-datatable-column name="Quantity" prop="quantity"></ngx-datatable-column>
+      <ngx-datatable-column name="Close Price" prop="close_price"></ngx-datatable-column>
+      <ngx-datatable-column name="Last Price" prop="last_price"></ngx-datatable-column>
+
+      <ngx-datatable-column name="Day Change" prop="day_change">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span>{{ value.toFixed(2) }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Day Change Percentage" prop="day_change_percentage">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span>{{ value.toFixed(2) }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Profit and Loss" prop="pnl">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span [ngStyle]="{'color': getProfitLossColor(value)}">
+            {{ value.toFixed(2) }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+    </ngx-datatable>
+  </div>
+</ion-content>
+
+<ion-toolbar *ngIf="!loading">
+  <div>
+    <h2>Total Investment: {{ stockStore.totalInvestment.toFixed(3) }}</h2>
+    <h2 [ngStyle]="{'color': getProfitLossColor(stockStore.totalProfitOrLoss)}">
+      Total Profit or Loss: {{ stockStore.totalProfitOrLoss.toFixed(2) }}
+    </h2>
+  </div>
+</ion-toolbar>
